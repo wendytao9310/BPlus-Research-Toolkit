@@ -1,0 +1,53 @@
+# Unified trigger table — MASTER COMMAND V4.0 section 57 (verbatim codes).
+# Codes 1-7 are a PROJECT-designed phase extension (documented as such, not literature).
+backend_default: simulated          # simulated | parallel | labjack | lsl
+codes:
+  session:
+    SESSION_START: 1
+    CONSENT_START: 2
+    SETUP_START: 3
+    SETUP_END: 4
+    QC_START: 5
+    QC_END: 6
+    SESSION_END: 7
+  rest:
+    REST_START: 10
+    REST_END: 11
+  mmn:
+    MMN_START: 100
+    MMN_STANDARD: 101
+    MMN_DEVIANT: 102
+    MMN_END: 109
+  vft:
+    VFT_START: 200
+    VFT_BLOCK: 201
+    VFT_REST: 202        # PROJECT extension
+    VFT_END: 209
+  nback:
+    NBACK_START: 300
+    NBACK_0BACK: 301
+    NBACK_2BACK: 302
+    NBACK_TARGET: 303
+    NBACK_NONTARGET: 304
+    NBACK_END: 309
+  emotion:
+    EMOTION_START: 400
+    EMOTION_NEUTRAL: 401
+    EMOTION_POSITIVE: 402
+    EMOTION_NEGATIVE: 403
+    EMOTION_END: 409
+    EMOTION_CUE: 410     # PROJECT extension
+    EMOTION_RATING: 411  # PROJECT extension
+    EMOTION_BLOCK: 412   # PROJECT extension (block design)
+  interview:
+    INTERVIEW_START: 500
+    INTERVIEW_QUESTION: 501
+    INTERVIEW_ANSWER: 502
+    INTERVIEW_END: 509
+  recovery:
+    RECOVERY_START: 600
+    RECOVERY_END: 601
+log:
+  required_columns: [participant_id, session_id, event_code, event_name, timestamp,
+                     experiment_clock, hardware_clock, trial_id, block_id, device,
+                     software, phase, meta]

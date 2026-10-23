@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.ruff_cache/
+
+# macOS and editors
+.DS_Store
+.vscode/
+.idea/
+
+# Local environments and caches
+.venv/
+.venv-exp/
+.uv-cache/
+venv/
+
+# Participant, acquisition, imported, and derived data
+data/
+logs/
+results/
+*.log
+*.tmp
+
+# Generated figures and local review outputs
+figures/*.png
+stimuli/emotion/review/
+stimuli/emotion/preview/
+stimuli/emotion/pilot_ratings.csv
+
+# Raw stimulus archives are private by default. The two explicitly reviewed
+# DEMO/PILOT directories below are intentionally versioned.
+stimuli/emotion/raw/*
+!stimuli/emotion/raw/uibvfed_mapped/
+!stimuli/emotion/raw/uibvfed_mapped/**
+!stimuli/emotion/raw/synthetic/
+!stimuli/emotion/raw/synthetic/**
+

@@ -1,0 +1,4 @@
+stimulus_id,condition,file,sha256,width,height,source_id,license_status,experimental_status,clinical_review,adolescent_rating,notes
+pilot_scene_positive_001,positive,positive_scene_001.png,aaa627b84a2cec6bb3584b18d124653cc75af02762d82a55a8349af9117a11d6,1254,1254,OPENAI_IMAGEGEN,PROJECT_GENERATED,PILOT_ONLY,PENDING,PENDING,"pleasant park and kite scene; no identifiable face"
+pilot_scene_neutral_001,neutral,neutral_scene_001.png,3777bbc3618eaba093297d796e51eb9bd9613c000696a5fc33baa1ae64daf5d4,1254,1254,OPENAI_IMAGEGEN,PROJECT_GENERATED,PILOT_ONLY,PENDING,PENDING,"empty classroom desk scene"
+pilot_scene_negative_001,negative,negative_scene_001.png,61ed835ace225c5d74695141ac80ba9ca6530c208bf5ecc3d8238d4cc42a11e1,1254,1254,OPENAI_IMAGEGEN,PROJECT_GENERATED,PILOT_ONLY,PENDING,PENDING,"mild negative rainy bicycle scene; no injury"

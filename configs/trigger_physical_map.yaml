@@ -1,0 +1,73 @@
+# Physical TTL mapping for BPlus.
+#
+# logical_code:
+#   Stable semantic code used by BPlus software, logs, analysis and documentation.
+#
+# physical_code:
+#   Code actually written to a physical digital trigger line.
+#
+# IMPORTANT:
+# - Never derive physical codes with modulo/truncation.
+# - physical codes must be unique.
+# - 0 is reserved for LOW/reset.
+# - Current mapping uses 1..41 so it is compatible with an 8-bit transport.
+# - Actual SynAmps²/CURRY and LIGHTNIRS electrical/port compatibility
+#   must still be verified during Pilot-0.
+
+physical_code_min: 1
+physical_code_max: 255
+low_code: 0
+
+mapping:
+  # Session
+  1: 1       # SESSION_START
+  2: 2       # CONSENT_START
+  3: 3       # SETUP_START
+  4: 4       # SETUP_END
+  5: 5       # QC_START
+  6: 6       # QC_END
+  7: 7       # SESSION_END
+
+  # Rest
+  10: 8      # REST_START
+  11: 9      # REST_END
+
+  # MMN
+  100: 10    # MMN_START
+  101: 11    # MMN_STANDARD
+  102: 12    # MMN_DEVIANT
+  109: 13    # MMN_END
+
+  # VFT
+  200: 14    # VFT_START
+  201: 15    # VFT_BLOCK
+  202: 16    # VFT_REST
+  209: 17    # VFT_END
+
+  # N-back
+  300: 18    # NBACK_START
+  301: 19    # NBACK_0BACK
+  302: 20    # NBACK_2BACK
+  303: 21    # NBACK_TARGET
+  304: 22    # NBACK_NONTARGET
+  309: 23    # NBACK_END
+
+  # Emotion
+  400: 24    # EMOTION_START
+  401: 25    # EMOTION_NEUTRAL
+  402: 26    # EMOTION_POSITIVE
+  403: 27    # EMOTION_NEGATIVE
+  409: 28    # EMOTION_END
+  410: 29    # EMOTION_CUE
+  411: 30    # EMOTION_RATING
+  412: 31    # EMOTION_BLOCK
+
+  # Interview
+  500: 32    # INTERVIEW_START
+  501: 33    # INTERVIEW_QUESTION
+  502: 34    # INTERVIEW_ANSWER
+  509: 35    # INTERVIEW_END
+
+  # Recovery
+  600: 36    # RECOVERY_START
+  601: 37    # RECOVERY_END

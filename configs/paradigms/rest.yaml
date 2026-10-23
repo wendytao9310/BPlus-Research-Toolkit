@@ -1,0 +1,9 @@
+paradigm: rest
+eyes: open
+duration_s: 180
+tail_s: 0
+evidence:
+  status: PROJECT_ADAPTATION
+  rationale: "Rest is the personal baseline / normalisation reference, not a depression score."
+  source: "MASTER COMMAND section 28"
+  verify: "3-min eyes-open duration -> check against literature in PHASE_0_LITERATURE_AUDIT"

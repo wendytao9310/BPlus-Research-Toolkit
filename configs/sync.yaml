@@ -1,0 +1,44 @@
+# 同步与触发工程参数（冻结于 2026-09-22）
+# 证据等级：ENGINEERING（工程约束，不是国际标准，禁止写成"标准值"）
+status: FROZEN
+evidence: ENGINEERING + USER_REPORTED
+
+fnirs:
+  device: Shimadzu LIGHTNIRS
+  sampling_interval_ms: 75          # 当前软件实际配置（截图确认）
+  sampling_rate_hz: 13.333
+  hardware_max_rate_hz: 100         # 硬件极限（10 ms），当前不用
+  nominal_scan_rate_hz: 75          # 标称扫描频率（13.3 ms），当前不用
+  event_quantisation_ms: 75         # 事件时间戳量化上限 = 一个采样周期
+  latching: unknown                 # unknown | yes | no  → 见下面 pulse 规则
+  verify: "5 分钟测试：发 10 个已知码，确认全部出现在导出文件的事件列里"
+
+eeg:
+  device: Compumedics SynAmps^2 (CURRY 8)
+  sampling_rate_hz: TO_VERIFY        # 采集 PC 现场读取（通常 500/1000/2000）
+  event_quantisation_ms: 1           # 放大器按采样点记录事件
+
+eye:
+  device: 7invensun aSee Pro F250
+  sampling_rate_hz: 250
+  synchronicity: TO_VERIFY           # SDK 时间戳 or TTL 输入
+
+pulse:
+  # 关键规则（不要照抄"50-60 ms 就够"的说法）：
+  #   若 LIGHTNIRS 对数字输入是"采样轮询"（不锁存），脉宽必须 > 一个采样周期（75 ms），
+  #   否则脉冲可能刚好落在两帧之间 → 漏抓。
+  #   若设备"边沿锁存"（latching=yes），脉宽可以短到几毫秒。
+  #   在 latching 未确认前，一律使用安全值 100 ms。
+  width_ms: 100
+  width_ms_if_latching: 50
+  min_gap_ms: 500                    # 我们不使用 <500 ms 的相邻触发（见 timing 校验）
+  convention: "上升沿 = 事件起点（onset）；分析一律用上升沿时间"
+
+resampling:
+  analysis_grid_hz: 10               # 离线把 fNIRS 放到 10 Hz 网格上做统计
+  rule: "保留原始事件时间戳；重采样只作用于信号，不作用于事件"
+  note: "75 ms 量化误差（±37.5 ms）对 5 s 量级的 NVC 滞后可忽略；MMN 的毫秒级时序只信 EEG"
+
+screen:
+  refresh_hz_assumed: 60             # 实验 PC 屏幕（现场确认，若是 120 Hz 更佳）
+  frame_ms: 16.67

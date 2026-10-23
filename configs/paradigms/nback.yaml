@@ -1,0 +1,30 @@
+paradigm: nback
+# ===== 证据已升级为 LIT + PUBLIC（公开数据集）=====
+# 来源（参数逐字核对）：Shin J, von Lühmann A, Kim DW, Mehnert J, Hwang HJ, Müller KR.
+#  "Simultaneous acquisition of EEG and NIRS during cognitive tasks for an open access dataset."
+#  Scientific Data 2018;5:180183. DOI: 10.1038/sdata.2018.3
+#  原文："a random one-digit number was given every 2 s. Each number was displayed for 0.5 s,
+#        followed by a fixation cross for the remaining 1.5 s. Twenty trials were repeated
+#        where the targets appeared with a 30% chance (70% non-targets)."
+#  该数据集为公开的同步 EEG+NIRS 认知任务数据集（26 名健康被试）→ 同时作为 PUBLIC 参考
+n_blocks_per_condition: 3
+trials_per_block: 16
+cue_s: 3.0
+stimulus_s: 0.5          # LIT: 0.5 s
+isi_s: 1.5               # LIT: 试次周期 2 s（0.5 s 刺激 + 1.5 s 注视十字）
+rest_s: 20.0
+targets_ratio: 0.30      # LIT: 目标 30%（原文 30%）
+targets_min: 4           # 由 30% 换算（16 试次 → 4-5 个目标）
+targets_max: 5
+practice_blocks: 1
+digits: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+match_key: return        # PROJECT: 匹配键（Enter）；非匹配时不按键
+start_delay_s: 5
+tail_s: 5
+random_seed: 20260922
+evidence:
+  status: LIT + PUBLIC
+  citation: "Shin J, et al. Sci Data. 2018;5:180183. DOI:10.1038/sdata.2018.3"
+  public_dataset: "Open access simultaneous EEG+NIRS dataset (0-back/2-back/3-back, DSR, word generation)"
+  deviation: "我们只用 0-back 与 2-back（MASTER COMMAND §24），原文另有 3-back；我们 3 块/条件，原文 20 试次×3 序列×3 会话"
+  verify: ["3 块/条件是否足以覆盖 fNIRS 血流动力学 carry-over（可加长 rest_s）"]

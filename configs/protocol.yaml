@@ -1,0 +1,43 @@
+# ~70-minute protocol (MASTER COMMAND section 12).
+# Phase durations here are PROJECT_DEFAULT: they must be re-derived from literature + pilot.
+session_total_s: 4200        # 70 min
+total_duration_s: 4200
+mode: DEMO                   # DEMO | PILOT | REAL  (section 18)
+trigger_backend: simulated   # simulated | parallel | labjack | lsl
+phases:
+  - name: consent_questionnaires
+    kind: fixed
+    duration_s: 420          # 0-7 min
+    markers:
+      - {code: CONSENT_START, at_s: 0}
+  - name: setup_qc
+    kind: fixed
+    duration_s: 900          # 7-22 min: EEG + fNIRS + eye tracker + physiology + trigger test
+    markers:
+      - {code: SETUP_START, at_s: 0}
+      - {code: QC_START, at_s: 780}
+      - {code: QC_END, at_s: 870}
+      - {code: SETUP_END, at_s: 900}
+  - name: rest_baseline
+    kind: paradigms
+    duration_s: 180          # 22-25 min: 3 min eyes-open fixation (section 28)
+    paradigms: [rest]
+    gap_s: 0
+  - name: computer_paradigms
+    kind: paradigms
+    duration_s: 1200         # 25-45 min: MMN -> VFT -> N-back -> Emotion (section 12/69)
+    paradigms: [mmn, vft, nback, emotion]
+    lead_in_s: 5
+    gap_s: 5
+  - name: clinical_interview
+    kind: fixed
+    duration_s: 1380         # 45-68 min: hospital-approved interview (section 30)
+    markers:
+      - {code: INTERVIEW_START, at_s: 0}
+      - {code: INTERVIEW_QUESTION, at_s: 60}
+      - {code: INTERVIEW_END, at_s: 1380}
+  - name: recovery_final
+    kind: paradigms
+    duration_s: 120          # 68-70 min: recovery + final explanation (section 29)
+    paradigms: [recovery]
+    gap_s: 0

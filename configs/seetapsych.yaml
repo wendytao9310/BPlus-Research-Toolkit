@@ -1,0 +1,26 @@
+enabled: false
+execution: POST_ACQUISITION_OFFLINE
+video:
+  fps: 30
+  minimum_resolution: [1280, 720]
+  codec: lossless_or_high_bitrate_intraframe
+  lighting: stable_diffuse_front_light
+  sync_event: CAMERA_SYNC
+attributes:
+  - face/detection
+  - face/expression
+  - face/action_units
+  - face/dimensional_affect
+  - face/heart_rate
+validation:
+  role: SECONDARY_EXPLORATORY
+  prohibit_clinical_label_inference: true
+  compare_heart_rate_against: ECG_OR_CONTACT_PPG
+  compare_gaze_against: ASEE_PRO_F250
+  compare_affect_against: SELF_REPORT_AND_HUMAN_FACS_SUBSET
+  require_subgroup_error_report: [sex, age_band, glasses, skin_tone, head_motion]
+privacy:
+  raw_video_is_biometric_sensitive: true
+  consent_required: true
+  access_control_required: true
+  retention_schedule_required: true

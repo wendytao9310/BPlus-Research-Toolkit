@@ -1,0 +1,41 @@
+{
+  "ok": false,
+  "checks": {
+    "manifest_non_empty": true,
+    "files_exist": true,
+    "files_readable": true,
+    "sha256_matches": true,
+    "technical_qc_passed": false,
+    "duplicate_check_passed": false,
+    "licence_audited": true,
+    "source_traceable": true,
+    "age_suitability_audited": false,
+    "cultural_suitability_audited": false,
+    "ethics_status_audited": false,
+    "clinical_review_done": false,
+    "stimulus_balance_passed": false,
+    "validation_report_completed": true,
+    "pilot_protocol_present": true,
+    "clinical_team_approval": false,
+    "version_assigned": true
+  },
+  "blockers": [
+    "技术 QC 未通过：uibvfed_quickstart_negative_negative_003, uibvfed_quickstart_negative_negative_007, uibvfed_quickstart_negative_negative_008, uibvfed_quickstart_neutral_neutral_002, uibvfed_quickstart_positive_positive_002, uibvfed_quickstart_positive_positive_003, uibvfed_quickstart_positive_positive_004, uibvfed_quickstart_positive_positive_005 …",
+    "检测到重复刺激：[('uibvfed_quickstart_negative_negative_003', 'uibvfed_quickstart_negative_negative_001'), ('uibvfed_quickstart_positive_positive_002', 'uibvfed_quickstart_negative_negative_001'), ('uibvfed_quickstart_positive_positive_003', 'uibvfed_quickstart_negative_negative_001'), ('uibvfed_quickstart_negative_negative_007', 'uibvfed_quickstart_negative_negative_005'), ('uibvfed_quickstart_positive_positive_004', 'uibvfed_quickstart_negative_negative_005')]",
+    "年龄适配未通过：uibvfed_quickstart_negative_negative_001, uibvfed_quickstart_negative_negative_002, uibvfed_quickstart_negative_negative_003, uibvfed_quickstart_negative_negative_004, uibvfed_quickstart_negative_negative_005, uibvfed_quickstart_negative_negative_006, uibvfed_quickstart_negative_negative_007, uibvfed_quickstart_negative_negative_008",
+    "文化适配未通过：uibvfed_quickstart_negative_negative_001, uibvfed_quickstart_negative_negative_002, uibvfed_quickstart_negative_negative_003, uibvfed_quickstart_negative_negative_004, uibvfed_quickstart_negative_negative_005, uibvfed_quickstart_negative_negative_006, uibvfed_quickstart_negative_negative_007, uibvfed_quickstart_negative_negative_008",
+    "伦理状态未通过：uibvfed_quickstart_negative_negative_001, uibvfed_quickstart_negative_negative_002, uibvfed_quickstart_negative_negative_003, uibvfed_quickstart_negative_negative_004, uibvfed_quickstart_negative_negative_005, uibvfed_quickstart_negative_negative_006, uibvfed_quickstart_negative_negative_007, uibvfed_quickstart_negative_negative_008",
+    "临床审阅未通过：uibvfed_quickstart_negative_negative_001, uibvfed_quickstart_negative_negative_002, uibvfed_quickstart_negative_negative_003, uibvfed_quickstart_negative_negative_004, uibvfed_quickstart_negative_negative_005, uibvfed_quickstart_negative_negative_006, uibvfed_quickstart_negative_negative_007, uibvfed_quickstart_negative_negative_008",
+    "缺少临床团队批准（CLINICAL_APPROVAL.md 未标记 APPROVED）"
+  ],
+  "warnings": [
+    "平衡性未达标：positive 只有 6 张（目标 8）；neutral 只有 2 张（目标 8）"
+  ],
+  "n_stimuli": 16,
+  "n_by_condition": {
+    "positive": 6,
+    "neutral": 2,
+    "negative": 8
+  },
+  "error_message": "ERROR: Emotion stimulus library is not validated for real participant acquisition."
+}

@@ -1,0 +1,149 @@
+# 情绪刺激来源登记（本轮实查结果，2026-09-22）
+# 规则：license 不明确 → DO_NOT_USE（MASTER COMMAND §8 禁止在无依据时宣称可用）
+evidence_note: "PUBLIC_VERIFIED = 本轮实际访问官方页面/Zenodo API 读到授权原文；TO_VERIFY = 无法访问或未核实"
+
+policy:
+  allow_auto_download_only_if: "auto_download_allowed: true 且 license_status 属于 ALLOWED_LICENSE_STATES"
+  allowed_license_states: [CC_BY_4_0, CC0, PROJECT_GENERATED, PUBLIC_DOMAIN]
+  redistribution_requires: [CC_BY_4_0, CC0, PUBLIC_DOMAIN, PROJECT_GENERATED]
+  research_only_states: [RESEARCH_NONCOMMERCIAL_NO_REDISTRIBUTION]
+  blocked_states: [LICENSE_NONE, UNVERIFIED, THIRD_PARTY_MIRROR_CLAIM, COMMERCIAL_LICENCE_REQUIRED]
+
+sources:
+  - id: UIBVFED_PLUS_LIGHT
+    name: "UIBVFEDPlus-Light: Virtual facial expression dataset"
+    kind: VIRTUAL_FACE
+    doi: "10.1371/journal.pone.0287006"
+    host: Zenodo/PLOS ONE
+    license_id: CC-BY-4.0
+    license_status: CC_BY_4_0
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: true
+    auto_download_allowed: true
+    age_range: "adult appearing"
+    notes: "虚拟（3D 渲染）面孔；CC-BY 允许再用与再分发（需署名）。属于 AI/虚拟面孔，须按独立刺激类型验证（§40）。"
+  - id: UIBVFED_QUICKSTART
+    name: "Images for 'Evaluating the Sensitivity to Virtual Characters'（快速起步小集）"
+    kind: VIRTUAL_FACE
+    doi: "10.5281/zenodo.399066"
+    host: Zenodo
+    license_id: CC-BY-4.0
+    license_status: CC_BY_4_0
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: true
+    auto_download_allowed: true
+    citation: "UIBVFED, DOI:10.5281/zenodo.399066 / 10.1371/journal.pone.0231266, Licence: CC-BY-4.0"
+    size_mb: 2.6
+    notes: "虚拟（3D 渲染）面孔；CC-BY 允许再用与再分发（必须署名）。表观年龄偏成人，须作为独立刺激类型（VIRTUAL_FACE）验证。"
+  - id: UIBVFED_MAIN
+    name: "UIBVFED: Virtual facial expression dataset（主集）"
+    kind: VIRTUAL_FACE
+    doi: "10.1371/journal.pone.0231266"
+    host: Zenodo
+    license_id: CC-BY-4.0
+    license_status: CC_BY_4_0
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: true
+    auto_download_allowed: true
+    citation: "UIBVFED, DOI:10.1371/journal.pone.0231266 / 10.5281/zenodo.399066, Licence: CC-BY-4.0"
+    size_mb: 1700
+    notes: "虚拟（3D 渲染）面孔主集（UIBVFED.rar ≈1.7 GB）；身份与表情强度更全，可补足三条件平衡。"
+  - id: UIBVFED_PHYSICAL_STATES
+    name: "UIBVFED Physical States"
+    kind: VIRTUAL_FACE
+    doi: "10.5281/zenodo.10793613"
+    host: Zenodo
+    license_id: CC-BY-4.0
+    license_status: CC_BY_4_0
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: true
+    auto_download_allowed: true
+    notes: "同源虚拟面孔库的物理状态子集。"
+  - id: KDEF
+    name: "Karolinska Directed Emotional Faces (KDEF/AKDEF)"
+    kind: PHOTO_FACE
+    host: kdef.se
+    license_id: research-noncommercial
+    license_status: RESEARCH_NONCOMMERCIAL_NO_REDISTRIBUTION
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: false
+    auto_download_allowed: false
+    quote: "The KDEF and AKDEF stimuli may be used only by researchers, and only for non-commercial purposes. The materials may never be redistributed in any form without written consent."
+    notes: "可用于科研，但**不得再分发** → 只能放 stimuli/emotion/restricted/（已 gitignore），不得进仓库/公开代码。"
+  - id: FACES_MPG
+    name: "FACES (Ebner, Riediger & Lindenberger) — MPIEA"
+    kind: PHOTO_FACE
+    host: faces.mpdl.mpg.de
+    license_id: research-account
+    license_status: RESEARCH_NONCOMMERCIAL_NO_REDISTRIBUTION
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: false
+    auto_download_allowed: false
+    quote: "FACES is freely available for usage in scientific research. Researchers can apply for an account on a case-by-case basis."
+    notes: "含青年/中年/老年男女，**年龄维度最全**；需逐案申请账号 + 签署 Platform Release Agreement。"
+  - id: NIMSTIM
+    name: "NimStim Set of Facial Expressions"
+    kind: PHOTO_FACE
+    host: macbrain.org
+    license_status: UNVERIFIED
+    evidence: ACCESS_FAILED_403
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "官方页面本轮返回 403，无法读到授权原文 → 按纪律标记 UNVERIFIED，需联系作者确认。"
+  - id: CHICAGO_FACE_DB
+    name: "Chicago Face Database (CFD)"
+    kind: PHOTO_FACE
+    host: chicagofaces.org
+    license_status: UNVERIFIED
+    evidence: ACCESS_FAILED_406
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "官网返回 406 → 未核实；CFD 通常需签署协议且限制再分发。"
+  - id: CKPLUS_ZENODO_MIRROR
+    name: "CK+ (Zenodo mirror claiming CC-BY-4.0)"
+    kind: PHOTO_FACE
+    doi: "10.5281/zenodo.11221351"
+    host: Zenodo
+    license_status: THIRD_PARTY_MIRROR_CLAIM
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "⚠️ 镜像页自称 CC-BY-4.0，但 CK+ 的原始授权来自匹兹堡大学，**镜像方无权再许可** → 不可依据该 CC-BY 使用（§8 禁止伪造授权链）。"
+  - id: JAFFE_ZENODO
+    name: "JAFFE (Zenodo copy)"
+    kind: PHOTO_FACE
+    doi: "10.5281/zenodo.14974867"
+    host: Zenodo
+    license_status: LICENSE_NONE
+    evidence: PUBLIC_VERIFIED
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "Zenodo 记录 license 字段为 None（无许可证）→ 默认保留所有权利，不得使用。"
+  - id: IAPS
+    name: "International Affective Picture System"
+    kind: SCENE_PHOTO
+    host: University of Florida
+    license_status: COMMERCIAL_LICENCE_REQUIRED
+    evidence: PUBLIC_VERIFIED_BY_REPUTATION
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "需购买授权；未购买前不得使用。"
+  - id: PROJECT_DESIGNED_SYNTHETIC
+    name: "项目自绘示意图（SYNTHETIC SCHEMATIC PLACEHOLDERS）"
+    kind: SCHEMATIC
+    host: 本项目生成（scripts/generate_synthetic_stimuli.py）
+    license_id: project-generated
+    license_status: PROJECT_GENERATED
+    evidence: PROJECT_GENERATED
+    redistribution_allowed: true
+    auto_download_allowed: false
+    notes: "非真人照片、非 AI 真人脸；仅用于 DEMO/PILOT 链路验证。manifest 里标记 NOT_FOR_REAL_PARTICIPANTS，永远无法通过 REAL MODE 闸门。"
+  - id: CHINESE_FACE_DB
+    name: "中文情绪面孔库（CFAPS/CAFPS 等）"
+    kind: PHOTO_FACE
+    host: 国内研究机构
+    license_status: UNVERIFIED
+    evidence: NOT_FOUND_OPEN_LICENCE
+    redistribution_allowed: false
+    auto_download_allowed: false
+    notes: "本轮未检索到可核实的开放许可；需直接联系版权方申请，或走自建路线（PROJECT_DESIGNED）。"

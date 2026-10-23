@@ -1,0 +1,29 @@
+{
+  "participant_id": "TEST001",
+  "session_id": "1",
+  "age": 15,
+  "sources": {
+    "eeg": {"status": "MISSING", "file": null, "format": null},
+    "fnirs": {"status": "MISSING", "file": null, "format": null},
+    "eye": {"status": "MISSING", "file": null, "format": null},
+    "behavior": {"status": "MISSING", "file": null, "format": "BPlus behavior CSV"},
+    "clinical": {"status": "MISSING", "file": null, "format": "authorized questionnaire totals"}
+  },
+  "data_quality": {
+    "score": 0,
+    "band": "INCOMPLETE",
+    "band_zh": "数据不完整",
+    "notes": ["此文件是输入模板，不是真实被试数据"]
+  },
+  "significance": 0.5,
+  "features": {
+    "nback": {},
+    "eeg": {},
+    "fnirs": {},
+    "nvc": {},
+    "emotion": {},
+    "recovery": {},
+    "eye": {},
+    "clinical": {}
+  }
+}

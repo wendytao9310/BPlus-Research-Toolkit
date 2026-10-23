@@ -1,0 +1,47 @@
+paradigm: emotion
+# ===== 证据升级：块设计 + 长 ITI（fNIRS 友好）=====
+# 来源：Balconi M, Vanutelli ME. "Hemodynamic (fNIRS) and EEG (N200) correlates of emotional
+#  inter-species interactions modulated by visual and auditory stimulation."
+#  Scientific Reports 2016;6:23083. DOI: 10.1038/srep23083
+#  原文："pictures ... displayed ... for 6 seconds, with an inter-stimulus interval of 8 seconds";
+#        "randomization of the six blocks across-subjects"
+#  ⇒ 该研究用 6 s 刺激 + 8 s ISI（块内随机）来保证 fNIRS 血流动力学回落
+#  ⇒ 我们的取舍：刺激 3 s（保留原文的"足够长以测血氧"意图）+ ITI 4–6 s 抖动（低于原文 8 s，
+#     以适配 70 min 预算），并把逐试次评分改为"块末集中评分"，避免评分屏打断血氧响应
+blocks_per_condition: 2      # 6 块（2×3 条件）
+trials_per_block: 4          # 每条件 8 试次，共 24 试次
+cue_s: 0.5
+face_s: 3.0                  # 3 s（原文 6 s，见上文取舍说明）
+iti_s: [4.0, 6.0]            # 抖动 ITI（原文 8 s 固定 ISI）
+block_rating_s: 6.0          # 块末集中评分：效价 + 唤醒度分开评（§27）
+inter_block_s: 1.0           # PROJECT: 块间过渡（受 20 min 预算约束，取 1 s）
+start_delay_s: 5
+tail_s: 5
+random_seed: 20260922
+conditions: [neutral, positive, negative]
+# SeetaPsych 不是刺激范式，而是对被试摄像头视频的连续测量层。
+# 正式分析以刺激起点为 0 s；刺激前基线来自 ITI 末段，刺激后反应允许延伸到 ITI。
+visual_measurement:
+  toolkit: SeetaPsych_v1.0
+  role: SECONDARY_EXPLORATORY
+  participant_camera_required: true
+  stimulus_camera_analysis: false
+  attributes: [face/expression, face/action_units, face/dimensional_affect, face/heart_rate]
+  windows_s:
+    prestimulus_baseline: [-1.0, 0.0]
+    early_response: [0.5, 2.0]
+    sustained_response: [2.0, 5.0]
+  normalization: within_participant_delta_from_prestimulus
+  minimum_face_valid_fraction: 0.80
+  prohibit_diagnostic_inference: true
+ratings:
+  valence: {scale: [1, 5], label: "1=非常不愉快 5=非常愉快"}
+  arousal: {scale: [1, 5], label: "1=非常平静 5=非常激动"}
+stimuli_manifest: stimuli/emotion/manifest.csv   # stimulus_id, condition, source, licence, age_suitability
+evidence:
+  status: LIT (block/ITI) + PROJECT_ADAPTATION (duration, trial count)
+  citation: "Balconi M, Vanutelli ME. Sci Rep. 2016;6:23083. DOI:10.1038/srep23083"
+  deviation: "刺激 6 s→3 s；ISI 8 s→4–6 s 抖动；逐试次评分→块末评分（均为适配 70 min 预算）"
+  verify:
+    - "正式刺激的伦理/版权/年龄适配与效价-唤醒度 pilot"
+    - "SeetaPsych 输出需与自评、人工编码和接触式心率完成本地验证"

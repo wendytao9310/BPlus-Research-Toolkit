@@ -1,0 +1,119 @@
+# Participant-facing descriptive states for report v2.7.
+# These are project rules for within-session functional descriptions, not
+# diagnostic cut-offs or age norms. Pilot calibration and preregistration are
+# required before formal inferential use.
+version: BPLUS-DESCRIPTIVE-STATE-1
+basis: PROJECT_DESCRIPTIVE_RULE
+disclaimer: "Project-level descriptive classification; it does not indicate normal/abnormal status, disease probability, or clinical diagnosis."
+references:
+  - "Duncan CC, et al. Event-related potentials in clinical research: guidelines for eliciting, recording, and quantifying mismatch negativity, P300, and N400. Clinical Neurophysiology. 2009. DOI:10.1016/j.clinph.2009.07.045"
+  - "Tseng YJ, Nouchi R, Cheng CH. Mismatch negativity in patients with major depressive disorder: a meta-analysis. Clinical Neurophysiology. 2021. DOI:10.1016/j.clinph.2021.06.019"
+  - "Nikolin S, et al. An investigation of working memory deficits in depression using the n-back task: a systematic review and meta-analysis. Journal of Affective Disorders. 2021. DOI:10.1016/j.jad.2021.01.084"
+  - "Yeung MK, Lin J. Probing depression, schizophrenia, and other psychiatric disorders using fNIRS and the verbal fluency test: a systematic review and meta-analysis. Journal of Psychiatric Research. 2021. DOI:10.1016/j.jpsychires.2021.06.015"
+  - "Yücel MA, et al. Best practices for fNIRS publications. Neurophotonics. 2021. DOI:10.1117/1.NPh.8.1.012101"
+metrics:
+  eeg.mmn_amplitude_uv:
+    bands:
+      - {max: -4.0, label: "More pronounced auditory-change response"}
+      - {max: -2.0, label: "Moderate auditory-change response"}
+      - {max: 0.0, label: "Weaker auditory-change response"}
+      - {max: 1000000, label: "Waveform direction requires review"}
+  eeg.mmn_latency_ms:
+    bands:
+      - {max: 190, label: "Earlier response timing"}
+      - {max: 230, label: "Intermediate response timing"}
+      - {max: 251, label: "Later response timing"}
+      - {max: 1000000, label: "Outside the predefined analysis window"}
+  analysis.mmn.qc.n_deviant:
+    bands:
+      - {max: 20, label: "Few usable trials"}
+      - {max: 40, label: "Basically sufficient usable trials"}
+      - {max: 1000000, label: "Sufficient usable trials"}
+  nback.d_prime:
+    bands:
+      - {max: 0.5, label: "Weak target discrimination"}
+      - {max: 1.5, label: "Limited target discrimination"}
+      - {max: 2.5, label: "Clear target discrimination"}
+      - {max: 1000000, label: "Very clear target discrimination"}
+  nback.median_rt_ms:
+    bands:
+      - {max: 700, label: "Faster response speed"}
+      - {max: 1200, label: "Moderate response speed"}
+      - {max: 2000, label: "Slower response speed"}
+      - {max: 1000000, label: "Markedly delayed response"}
+  eeg.nback_p3_diff_uv:
+    bands: &signed_positive
+      - {max: -0.1, label: "Reduced response under high load"}
+      - {max: 0.1, label: "Similar response across conditions"}
+      - {max: 1000000, label: "Enhanced response under high load"}
+  eeg.frontal_theta_diff_db:
+    bands: *signed_positive
+  fnirs.nback_hbo_beta_um:
+    bands: *signed_positive
+  fnirs.vft_left_pfc_hbo_beta_um:
+    bands: *signed_positive
+  fnirs.vft_right_pfc_hbo_beta_um:
+    bands: *signed_positive
+  fnirs.vft_hbo_delta_um:
+    bands:
+      - {max: -0.05, label: "Reduced task-period oxygenation response"}
+      - {max: 0.05, label: "Small task-period oxygenation change"}
+      - {max: 1000000, label: "Increased task-period oxygenation response"}
+  vft.valid_words:
+    bands:
+      - {max: 1, label: "No valid word production obtained"}
+      - {max: 1000000, label: "Lexical-retrieval output obtained"}
+  eeg.emotion_lpp_neg_neu_uv:
+    bands:
+      - {max: -0.1, label: "Lower sustained response to negative stimuli"}
+      - {max: 0.1, label: "Similar response across stimulus types"}
+      - {max: 1000000, label: "Higher sustained response to negative stimuli"}
+  fnirs.emotion_hbo_neg_neu_um:
+    bands:
+      - {max: -0.05, label: "Lower oxygenation response in the negative condition"}
+      - {max: 0.05, label: "Similar oxygenation response across conditions"}
+      - {max: 1000000, label: "Higher oxygenation response in the negative condition"}
+  emotion.valence_diff:
+    bands:
+      - {max: -0.5, label: "Negative stimuli experienced as less pleasant"}
+      - {max: 0.5, label: "Similar subjective experience across stimulus types"}
+      - {max: 1000000, label: "Higher valence rating for negative stimuli"}
+  emotion.arousal_mean:
+    bands:
+      - {max: 2.0, label: "Lower subjective arousal"}
+      - {max: 4.0, label: "Moderate subjective arousal"}
+      - {max: 5.1, label: "Higher subjective arousal"}
+  fnirs.interview_left_probe_hbo_response:
+    bands: &signed_small
+      - {max: -0.00001, label: "Reduced response during interview"}
+      - {max: 0.00001, label: "Small change during interview"}
+      - {max: 1000000, label: "Increased response during interview"}
+  fnirs.interview_right_probe_hbo_response:
+    bands: *signed_small
+  fnirs.interview_left_right_hbo_difference:
+    bands: *signed_small
+  fnirs.interview_hbr_response:
+    bands: *signed_small
+  fnirs.interview_post_task_recovery:
+    bands: *signed_small
+  fnirs.interview_valid_blocks:
+    bands:
+      - {max: 20, label: "Few valid task segments"}
+      - {max: 27, label: "Basically sufficient valid task segments"}
+      - {max: 31, label: "Sufficient valid task segments"}
+  fnirs.interview_usable_channels:
+    bands:
+      - {max: 14, label: "Few usable channels"}
+      - {max: 18, label: "Basically sufficient usable channels"}
+      - {max: 21, label: "Sufficient usable channels"}
+  recovery.recovery_index:
+    bands: &return_ratio
+      - {max: 0.25, label: "Close to the current-session baseline"}
+      - {max: 0.60, label: "Partially returned toward the current-session baseline"}
+      - {max: 1000000, label: "Still differs from the current-session baseline"}
+  recovery.hbo_return_ratio:
+    bands: *return_ratio
+  recovery.eeg_alpha_return_ratio:
+    bands: *return_ratio
+  recovery.hrv_return_ratio:
+    bands: *return_ratio

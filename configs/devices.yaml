@@ -1,0 +1,54 @@
+# Hardware audit (section 16-17). Every entry carries an explicit evidence status.
+computers:
+  experiment_pc:
+    role: paradigms + eye tracker + trigger source + LSL recording
+    software: [PsychoPy, aSee Pro SDK, LabRecorder]
+  acquisition_pc:
+    role: EEG (CURRY 8 / SynAmps^2) + fNIRS (LIGHTNIRS) + physiology AUX
+    software: [CURRY 8, LIGHTNIRS]
+    warning: confirm that CURRY and the LIGHTNIRS software can run simultaneously (PILOT-0 test)
+devices:
+  - name: SynAmps^2
+    vendor: Compumedics Neuroscan
+    software: CURRY 8
+    status: REQUIRES_VENDOR_DOC
+    evidence: USER_REPORTED (screen photo + CURRY 8 habit) + PUBLIC_VERIFIED (MNE readers)
+    native_format: ".cdt + .dpa/.ceo sidecars (not the old single-file .cnt)"
+    export: [".cnt (File -> Export)", ".edf (File -> Export)"]
+    reader_dependency: "mne.io.read_raw_curry requires `curryreader` (BSD-3, v0.1.2, 2025-04, low adoption)"
+    decision: "validate path A (.cdt) and path B (.cnt/.edf) once, then log the choice"
+    sync: TTL trigger input (from experiment PC) — pinout to be confirmed
+  - name: LIGHTNIRS
+    vendor: Shimadzu
+    status: REQUIRES_VENDOR_DOC
+    evidence: PUBLIC_VERIFIED (22 ch per unit) + USER_REPORTED (Trig In spec + marker in export)
+    export: [".csv", ".txt"]   # Oxy-Hb / Deoxy-Hb / Total-Hb + marker/event column
+    sampling_interval_ms: TO_VERIFY   # conflicting reports: 10 / 13.3 / 75 ms
+    sync: "Trig In = TTL high 2.4-5 V, low 0-0.8 V, default rising edge; pulse >= 2 sampling intervals"
+    probe_coordinates: "not in the native export -> optional magnetic digitizer OR virtual registration (must be declared)"
+    vital_test: "send 10 known codes, confirm they appear in the exported marker column"
+  - name: aSee Pro F250
+    vendor: 7invensun
+    status: REQUIRES_VENDOR_SDK
+    evidence: USER_REPORTED (purchase spec sheet includes aSee Pro SDK)
+    sampling_hz: 250
+
+    export:
+      - gaze position
+      - pupil diameter
+      - fixation
+      - timestamp
+
+    sync:
+      - SDK timestamp alignment
+      - TTL synchronization if supported
+      - LSL stream if available
+
+    note: >
+      Eye tracking is used as an auxiliary behavioral modality.
+      Synchronization with EEG-fNIRS requires PILOT-0 timestamp validation.
+  - name: physiology
+    vendor: via SynAmps^2 AUX (preferred) or BIOPAC MP160 (alternative)
+    status: IMPLEMENTED
+    evidence: PROJECT_DESIGN
+    note: AUX channels keep ECG/GSR on the EEG clock, which removes a synchronisation risk

@@ -1,0 +1,8 @@
+paradigm: recovery
+duration_s: 120
+tail_s: 0
+evidence:
+  status: PROJECT_ADAPTATION
+  rationale: "Post-task recovery baseline; the recovery index must be interpreted within this session only."
+  source: "MASTER COMMAND section 29"
+  verify: ["recovery index definition + division-by-zero/noise handling"]

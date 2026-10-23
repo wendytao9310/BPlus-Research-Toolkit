@@ -1,0 +1,14 @@
+# BPlus experiment-computer lock (Python 3.11; reviewed 2026-09-24).
+# Vendor-only SDKs (CURRY, LIGHTNIRS, aSee) are intentionally not invented here.
+PyYAML==6.0.3
+Jinja2==3.1.6
+MarkupSafe==3.0.4
+numpy==2.4.6
+scipy==1.17.1
+pandas==2.3.3
+pytest==9.1.1
+psychopy==2026.2.4
+pylsl==1.18.5
+pyserial==3.5
+streamlit==1.49.1
+psutil==7.1.0

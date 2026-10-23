@@ -1,0 +1,15 @@
+# Restricted source libraries must never be committed.
+restricted/
+raw/*
+
+# Public DEMO/PILOT assets reviewed for this release.
+!raw/uibvfed_mapped/
+!raw/uibvfed_mapped/**
+!raw/synthetic/
+!raw/synthetic/**
+
+# Generated local review output.
+preview/*.png
+!preview/.gitkeep
+review/
+pilot_ratings.csv

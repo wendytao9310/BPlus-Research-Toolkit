@@ -1,0 +1,133 @@
+# 状态引擎配置 —— MASTER COMMAND §34-38、§52-56
+# 所有阈值/权重都在这里，代码里禁止硬编码（§52）。
+# 证据等级：PROJECT_DESIGN 表示本项目设计；PILOT_REQUIRED 表示必须由 pilot 校准。
+evidence_status_default: PROJECT_DESIGN
+
+bands:
+  severity:                # 认知负荷 / 唤醒度 / 症状严重度
+    - {max: 0.25, label: Low,       zh: Low}
+    - {max: 0.50, label: Mild,      zh: Mild}
+    - {max: 0.75, label: Moderate,  zh: Moderate}
+    - {max: 1.01, label: High,      zh: High}
+  stability:               # 稳定性（0 = 稳定，1 = 波动）
+    - {max: 0.50, label: Stable,    zh: Stable}
+    - {max: 1.01, label: Variable,  zh: Variable}
+  quality:                 # 适应 / 恢复（0 = 好，1 = 差）
+    - {max: 0.25, label: Good,      zh: Good}
+    - {max: 0.50, label: Fair,      zh: Fair}
+    - {max: 0.75, label: Variable,  zh: Variable}
+    - {max: 1.01, label: Poor,      zh: Poor}
+
+confidence:
+  weights: {data_quality: 0.5, coverage: 0.3, significance: 0.2}
+  bands:
+    - {max: 0.40, label: Low,       zh: Low}
+    - {max: 0.70, label: Moderate,  zh: Moderate}
+    - {max: 1.01, label: High,      zh: High}
+  note: "Confidence indicates how strongly the data and methods support the status estimate; it is not diagnostic probability."
+
+baseline:
+  weight: 0.35             # 个体基线的混合权重（§55）
+  note: "When a baseline is available: state = (1-w)·current + w·baseline_deviation"
+
+task_state:
+  cognitive_load:
+    zh: Cognitive load
+    bands: severity
+    metrics:
+      - {key: nback.d_prime,            direction: negative, ref: [1.0, 4.0],  weight: 0.40, evidence: PROJECT_DESIGN}
+      - {key: nback.rt_cv,              direction: positive, ref: [0.10, 0.35], weight: 0.30, evidence: PROJECT_DESIGN}
+      - {key: fnirs.nback_hbo_beta_um,  direction: positive, ref: [0.0, 0.6],   weight: 0.30, evidence: PILOT_REQUIRED}
+  attention:
+    zh: Attention stability
+    bands: stability
+    metrics:
+      - {key: nback.rt_cv,              direction: positive, ref: [0.10, 0.40], weight: 0.50, evidence: PROJECT_DESIGN}
+      - {key: nback.omission_rate,      direction: positive, ref: [0.0, 0.30],  weight: 0.30, evidence: PROJECT_DESIGN}
+      - {key: eye.gaze_dispersion_deg,  direction: positive, ref: [1.0, 8.0],   weight: 0.20, evidence: PILOT_REQUIRED}
+  emotional_arousal:
+    zh: Emotional arousal
+    bands: severity
+    metrics:
+      - {key: emotion.arousal_mean,     direction: positive, ref: [1.0, 5.0],   weight: 0.40, evidence: PROJECT_DESIGN}
+      - {key: physiology.scr_count,     direction: positive, ref: [0.0, 12.0],  weight: 0.30, evidence: PILOT_REQUIRED}
+      - {key: physiology.hrv_sdnn_ms,   direction: negative, ref: [15.0, 80.0], weight: 0.30, evidence: PILOT_REQUIRED}
+  task_adaptation:
+    zh: Task adaptation
+    bands: quality
+    metrics:
+      - {key: nback.accuracy,           direction: negative, ref: [0.60, 1.0],  weight: 0.50, evidence: PROJECT_DESIGN}
+      - {key: nback.false_alarm_rate,   direction: positive, ref: [0.0, 0.40],  weight: 0.50, evidence: PROJECT_DESIGN}
+  recovery:
+    zh: Post-task recovery
+    bands: quality
+    metrics:
+      - {key: recovery.hbo_return_ratio, direction: negative, ref: [0.0, 1.0],  weight: 0.60, evidence: PILOT_REQUIRED}
+      - {key: recovery.hrv_return_ratio, direction: negative, ref: [0.0, 1.0],  weight: 0.40, evidence: PILOT_REQUIRED}
+
+brain_state:
+  pfc_activity:
+    zh: Prefrontal functional activity
+    bands: stability
+    metrics:
+      - {key: fnirs.vft_hbo_block_sd,   direction: positive, ref: [0.05, 0.40], weight: 0.60, evidence: PILOT_REQUIRED}
+      - {key: fnirs.sci,                direction: negative, ref: [0.5, 1.0],   weight: 0.40, evidence: PILOT_REQUIRED}
+  executive_control:
+    zh: Executive-control load
+    bands: severity
+    metrics:
+      - {key: fnirs.nback_hbo_beta_um,  direction: positive, ref: [0.0, 0.6],   weight: 0.50, evidence: PILOT_REQUIRED}
+      - {key: nback.d_prime,            direction: negative, ref: [1.0, 4.0],   weight: 0.50, evidence: PROJECT_DESIGN}
+  sensory_processing:
+    zh: Sensory processing
+    bands: stability
+    metrics:
+      - {key: eeg.mmn_amplitude_abs_uv, direction: negative, ref: [0.5, 4.0],   weight: 0.70, evidence: LIT_PROXY}
+      - {key: eeg.mmn_latency_ms,       direction: positive, ref: [150.0, 260.0], weight: 0.30, evidence: LIT_PROXY}
+  emotion_processing:
+    zh: Emotion processing
+    bands: stability
+    metrics:
+      - {key: emotion.valence_mean,     direction: positive, ref: [1.0, 5.0],   weight: 0.50, evidence: PROJECT_DESIGN}
+      - {key: nvc.r,                    direction: negative, ref: [0.0, 0.6],   weight: 0.50, evidence: PILOT_REQUIRED}
+  eeg_fnirs_coordination:
+    zh: EEG-fNIRS coordination
+    bands: stability
+    metrics:
+      - {key: nvc.r,                    direction: negative, ref: [0.05, 0.60], weight: 0.60, evidence: PILOT_REQUIRED}
+      - {key: nvc.p_value,              direction: positive, ref: [0.001, 0.20], weight: 0.40, evidence: PILOT_REQUIRED}
+  recovery:
+    zh: Brain functional recovery
+    bands: quality
+    metrics:
+      - {key: recovery.hbo_return_ratio, direction: negative, ref: [0.0, 1.0],  weight: 1.0, evidence: PILOT_REQUIRED}
+
+clinical_state:            # 由问卷 + 临床访谈提供（§30-32）；阈值必须由医院确认
+  depressive_symptoms:
+    zh: Depressive symptoms
+    bands: severity
+    evidence_status: CLINICAL_PENDING_HOSPITAL_CONFIRMATION
+    metrics:
+      - {key: clinical.phq9_total,      direction: positive, ref: [0.0, 27.0],  weight: 1.0, evidence: CLINICAL_PENDING}
+  anxiety_symptoms:
+    zh: Anxiety symptoms
+    bands: severity
+    evidence_status: CLINICAL_PENDING_HOSPITAL_CONFIRMATION
+    metrics:
+      - {key: clinical.gad7_total,      direction: positive, ref: [0.0, 21.0],  weight: 1.0, evidence: CLINICAL_PENDING}
+  sleep_concerns:
+    zh: Sleep-related difficulties
+    bands: severity
+    evidence_status: CLINICAL_PENDING_HOSPITAL_CONFIRMATION
+    metrics:
+      - {key: clinical.sleep_score,     direction: positive, ref: [0.0, 10.0],  weight: 1.0, evidence: CLINICAL_PENDING}
+  social_functioning:
+    zh: Social functioning
+    bands: quality
+    evidence_status: CLINICAL_PENDING_HOSPITAL_CONFIRMATION
+    metrics:
+      - {key: clinical.social_impairment, direction: positive, ref: [0.0, 10.0], weight: 1.0, evidence: CLINICAL_PENDING}
+
+integrated:
+  weights: {task: 0.35, brain: 0.35, clinical: 0.30}
+  note: "The integrated profile describes status only and does not produce a diagnosis."

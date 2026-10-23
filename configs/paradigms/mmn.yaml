@@ -1,0 +1,39 @@
+paradigm: mmn
+# ===== 证据已升级为 LIT（原文逐字核对）=====
+# 来源：孙宏毅 等. 青少年抑郁症前额叶功能与负性失匹配波特征：fNIRS-ERP 多模态研究.
+#      生物医学工程学杂志 2025;42(4):701-706. DOI: 10.7507/1001-5515.202503053
+#      原文 1.3.3 节："非主动注意状态下……高概率标准刺激（80%，1 000 Hz 音频，60 dB）
+#      和低概率偏离刺激（20%，2 000 Hz 音频，80 dB）的随机序列呈现，刺激率 1 Hz……
+#      偏离刺激反应叠加 40 次……MMN 通常在刺激后 100～250 ms"
+# 人群：33 例首发轻中度抑郁症青少年 + 33 健康对照（与我们的目标人群一致）
+standard_hz: 1000        # LIT: 原文 1 000 Hz
+standard_db: 60          # LIT: 原文 60 dB
+deviant_hz: 2000         # LIT: 原文 2 000 Hz（偏差量 +1000 Hz）
+deviant_db: 80           # LIT: 原文 80 dB  ⚠️ 频率与强度双重偏差（见文档 confound 说明）
+tone_ms: 100             # LIT(范围) + PROJECT: 频率偏差范式惯例为 50–100 ms（等长标准/偏差以避免音长混淆）；
+                         # 依据 Duncan 2009 guidelines 与 Murphy 2022（50 ms 标准 / 100 ms 偏差，时长偏差范式）
+min_standards_between_deviants: 4   # LIT: Murphy 2022 "at least four standard trials preceding each deviant"; Pang 2014: 3–11
+analysis_window_ms: [100, 250]      # LIT: 锚论文 100–250 ms（Murphy 2022 / Fitzgerald 2020 报告峰值 120–250 ms）
+soa_ms: 1000             # LIT: 原文"刺激率 1 Hz"
+deviant_probability: 0.15  # LIT 折中：锚论文 20%（随机、无最小间隔）vs Murphy 2022 10%（≥4 标准刺激间隔）
+                           # 我们同时要"≥4 个标准刺激"（防适应）与"足够多的偏差"，15% 是可同时满足的取值
+n_blocks: 2
+trials_per_block: 170    # PROJECT: 2×170=340 试次 → 68 个偏差试次（原文叠加 40 次；受 20 min 预算约束）
+start_delay_s: 5
+tail_s: 10
+random_seed: 20260922
+analysis_window_ms: [100, 250]   # LIT: 原文 100～250 ms
+evidence:
+  status: LIT
+  citation: "Sun H, et al. J Biomed Eng. 2025;42(4):701-706. DOI:10.7507/1001-5515.202503053"
+  population: "33 first-episode mild-moderate adolescent MDD vs 33 HC"
+  reported_effects: "MMN 潜伏期延长（Fz 227.88±31.08 vs 208.70±25.35 ms, P<0.01）；Fz 波幅降低（2.42±2.18 vs 5.65±5.59 μV, P=0.03）"
+  confound_note: "原文偏差刺激同时改变频率(+1000Hz)与强度(+20dB)，非纯频率偏差；如需纯频率偏差需另设条件"
+  citation_extra: ["Duncan CC, et al. Clin Neurophysiol. 2009;120(11):1883-1908. DOI:10.1016/j.clinph.2009.07.045",
+                   "Murphy N, et al. Braz J Psychiatry. 2022;44(1):61-73. DOI:10.1590/1516-4446-2020-1685",
+                   "Pang X, et al. PLoS One. 2014;9(3):e91995. DOI:10.1371/journal.pone.0091995",
+                   "Fitzgerald K, Todd J. Front Psychiatry. 2020;11:468. DOI:10.3389/fpsyt.2020.00468"]
+  resolved_gaps: ["G1 音长：50–100 ms 为该范式惯例（等长标准/偏差），保留 100 ms",
+                  "G3 偏差数：Murphy 2022 用 630 试次/63 偏差；我们 340 试次/≈68 偏差，量级一致",
+                  "偏差间隔：采用 ≥4 标准刺激（Murphy 2022 原文规则）"]
+  verify: ["若后期要测时长偏差 MMN，需另设 50/100 ms 条件（Toyomaki 2008, DOI:10.1016/j.pnpbp.2007.07.020）"]

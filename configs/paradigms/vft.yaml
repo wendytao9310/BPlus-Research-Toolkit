@@ -1,0 +1,27 @@
+paradigm: vft
+# ===== 证据已升级为 LIT（原文逐字核对）=====
+# 来源：孙宏毅 等. 同上（DOI: 10.7507/1001-5515.202503053），原文 1.2.1 节：
+#   "采用 Quan 等为中国受试者开发的中文音韵言语流畅性任务范式。
+#    任务设计包括 30 s 的预任务休息期、60 s 的任务期以及 60 s 的任务后休息期。
+#    预任务和任务后休息期间，受试者根据 fNIRS 设备的语音提示进行连续计数。
+#    任务期分为四个连续的 15 s 模块，每个模块依次呈现四个中文音节"
+# ⇒ 单周期 design：30 s rest + 60 s task + 60 s rest = 150 s
+design: single_cycle_chinese_phonemic
+block_rest_before_s: 30
+block_task_s: 60
+block_rest_after_s: 60
+sub_blocks: 4                 # LIT: 60 s 分成 4 个连续 15 s 模块
+syllables_per_sub_block: 4    # LIT: 每个 15 s 模块呈现 4 个中文音节
+counting_during_rest: true    # LIT: 休息期连续计数（防止默语/走神，保持基线可比）
+prompt_s: 5                   # PROJECT: 屏幕提示（原文用语音提示）
+tail_s: 5
+prompts:
+  - {kind: phonemic, text: "上(shàng)", sub_block: 1}
+  - {kind: phonemic, text: "时(shí)",   sub_block: 2}
+  - {kind: phonemic, text: "三(sān)",   sub_block: 3}
+  - {kind: phonemic, text: "四(sì)",    sub_block: 4}
+evidence:
+  status: LIT
+  citation: "Sun H, et al. J Biomed Eng. 2025;42(4):701-706. DOI:10.7507/1001-5515.202503053 (范式源自 Quan et al.)"
+  reported_effect: "抑郁组左侧额极前额叶 Oxy-Hb 低于对照（CH15、CH17，P<0.05）"
+  verify: ["Quan 等的原始范式论文（中文音韵 VFT 常模）需补充引文", "音节表需与教育水平匹配"]

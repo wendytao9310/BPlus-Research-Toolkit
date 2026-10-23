@@ -1,0 +1,17 @@
+# LIGHTNIRS 导出文件的列映射（**必须现场填写**，不要猜列名）
+# 用法：scripts/qc_from_exports.py --fnirs <导出.csv> --fnirs-map configs/lightnirs_columns.yaml
+status: TODO_FILL_ON_SITE
+evidence: USER_REPORTED + TO_VERIFY
+
+sampling_interval_ms: null      # 现场从软件读出（当前截图值为 75 ms → 13.333 Hz，D-001）
+time_column: null               # 例：Time(s) / 时间 / TIMESTAMP
+marker_column: null             # 触发打标列（若导出文件确实存在该列，F3 验证通过）
+hbo_columns: []                 # 例：["CH1 Oxy-Hb", "CH2 Oxy-Hb", ...]
+hbr_columns: []                 # 例：["CH1 Deoxy-Hb", ...]
+raw_760_columns: []             # 原始光强（用于真正的 SCI）；若导出不含原始光强则留空
+raw_850_columns: []             # 同上
+n_channels: null                # 例：22
+
+notes:
+  - "LIGHTNIRS 导出若只有 HbO/HbR 而无原始光强 → SCI 无法计算，DQ 的 fNIRS 分项需去掉 SCI 权重（脚本会提示）"
+  - "marker 列是 F3 的关键：若 10 个脉冲码没有出现在该列，必须启用降级方案（见 PILOT0_CHECKLIST 阶段 1 失败分支）"

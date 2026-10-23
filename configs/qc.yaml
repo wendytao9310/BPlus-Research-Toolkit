@@ -1,0 +1,47 @@
+# 数据质量（QC）与 DQ 评分配置 —— MASTER COMMAND §39-42
+# 所有阈值必须标注三类之一；本文件当前全部为 PILOT_REQUIRED / ENGINEERING，禁止写成"国际标准"。
+evidence_status: PILOT_REQUIRED + ENGINEERING
+
+dq_weights:                     # DQ = Σ(weight × modality_score)
+  eeg: 0.25
+  fnirs: 0.30
+  epoch: 0.20
+  synchronization: 0.15
+  physiology: 0.10
+
+dq_bands:                       # 初始工程阈值（§40），需 pilot 校准
+  - {min: 85, label: GOOD,       zh: 好}
+  - {min: 70, label: ACCEPTABLE, zh: 可接受}
+  - {min: 50, label: POOR,       zh: 差}
+  - {min: 0,  label: INVALID,    zh: 无效}
+
+eeg:
+  usable_channel_ratio: {target: 0.85, floor: 0.60}   # §41: ≥85%
+  flat_channel_max: 0.05
+  line_noise_ratio_max: 0.30      # 50 Hz 相对带宽内功率
+  movement_artifact_ratio_max: 0.20
+  epoch_rejection_max: 0.20       # §41: 有效 epoch ≥80%
+  weights: {usable_channels: 0.35, line_noise: 0.20, artifacts: 0.20, epochs: 0.25}
+
+fnirs:
+  sci_min: 0.80                   # §42: 可参考 SCI ≥ 0.80（需按设备/文献校准）
+  channel_quality_min: 0.70
+  motion_artifact_ratio_max: 0.15
+  baseline_drift_max: 0.50
+  weights: {sci: 0.35, channels: 0.25, motion: 0.20, baseline: 0.20}
+
+epoch:
+  valid_ratio_target: 0.80        # §41: 有效 epoch ≥80%
+  min_epochs_per_condition: 20
+
+synchronization:
+  require_pulse_completeness: true
+  offset_abs_max_ms: 75           # 一个 fNIRS 采样周期（D-001）
+  jitter_sd_max_ms: 40
+  verdict_pass_score: 100
+  verdict_fail_score: 0
+
+physiology:
+  valid_segment_ratio_target: 0.90
+  min_hrv_sdnn_ms: 10
+  scr_events_min: 1
