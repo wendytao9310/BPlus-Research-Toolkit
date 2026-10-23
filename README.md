@@ -32,7 +32,7 @@ Modalities are staged first and analysed together only after the operator select
 Requirements: macOS, Python 3.11, and approximately 20 GiB free disk space for a full PsychoPy environment.
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/wendytao9310/BPlus-Research-Toolkit.git
 cd BPlus-Research-Toolkit
 bash scripts/setup_environment.sh
 ```
@@ -60,7 +60,7 @@ No participant data are included in this repository. Do not commit raw EEG, fNIR
 
 ## Distribution
 
-This source preview can be downloaded as a GitHub Release archive. A portable macOS application requires a bundled Python/PsychoPy runtime. For normal double-click installation without Gatekeeper warnings, the application must additionally be signed with an Apple Developer ID and notarized.
+Download the verified source package from the [latest GitHub Release](https://github.com/wendytao9310/BPlus-Research-Toolkit/releases/latest). A portable macOS application requires a bundled Python/PsychoPy runtime. For normal double-click installation without Gatekeeper warnings, the application must additionally be signed with an Apple Developer ID and notarized.
 
 ## Project status
 
@@ -70,5 +70,5 @@ Original BPlus source code is released under the [Apache License 2.0](LICENSE). 
 
 ## Citation
 
-If you use or evaluate this research software, cite the archived release metadata in [CITATION.cff](CITATION.cff). Replace the placeholder repository URL and DOI after publication.
+If you use or evaluate this research software, cite the release metadata in [CITATION.cff](CITATION.cff). A DOI can be added after archival publication.
 

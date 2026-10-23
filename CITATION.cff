@@ -9,5 +9,5 @@ authors:
     given-names: Wenwen
 abstract: "A multimodal experimental acquisition, quality-control, analysis, and reporting toolkit for adolescent mental-health research."
 license: Apache-2.0
-repository-code: "REPLACE_AFTER_PUBLICATION"
+repository-code: "https://github.com/wendytao9310/BPlus-Research-Toolkit"
 
