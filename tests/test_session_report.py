@@ -34,9 +34,9 @@ def test_session_report_uses_real_behavior_and_marks_unavailable_modalities(tmp_
                                      paradigms=["nback", "emotion"])
     html = report.read_text(encoding="utf-8")
     assert "66.7%" in html and "1/2" in html and "510 ms" in html
-    assert "BPlus 青少年多模态研究报告" in html
-    assert "DATA PENDING" in html and "数据不足" in html
-    assert "系统不会用演示或缺失数据推测结论" in html
+    assert "BPlus Youth Multimodal Research Report" in html
+    assert "DATA PENDING" in html and "Insufficient data" in html
+    assert "does not infer conclusions from demonstration or missing data" in html
     metadata = json.loads((session / "sub-P01_ses-1_metadata.json").read_text(encoding="utf-8"))
     assert metadata == {"participant_id": "P01", "session_id": "1", "age": None}
 
@@ -55,7 +55,7 @@ def test_session_report_summarizes_emotion_ratings(tmp_path):
     report = generate_session_report(session, tmp_path / "reports", participant_id="P02", session_id="2",
                                      paradigms=["emotion"])
     html = report.read_text(encoding="utf-8")
-    assert "3.00" in html and "2/1" not in html and "已完成" in html
+    assert "3.00" in html and "2/1" not in html and "completed" in html.lower()
 
 
 def test_paradigm_log_does_not_claim_physiology_qc_pass(tmp_path):
@@ -68,6 +68,6 @@ def test_paradigm_log_does_not_claim_physiology_qc_pass(tmp_path):
     report = generate_session_report(session, tmp_path / "reports", participant_id="P03", session_id="1",
                                      paradigms=["mmn"], age=13)
     html = report.read_text(encoding="utf-8")
-    mmn_card = html.split("自动感觉加工 · MMN", 1)[1].split("</section>", 1)[0]
+    mmn_card = html.split("Automatic Sensory Processing · MMN", 1)[1].split("</section>", 1)[0]
     assert "DATA PENDING" in mmn_card
     assert "<span class=\"badge PASS\">PASS</span>" not in mmn_card

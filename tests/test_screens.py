@@ -33,9 +33,9 @@ def test_nback_trials_carry_digits_and_response_windows():
     digits = [t for t in trials if t.kind == "text"]
     assert len(cues) == 7 and len(digits) == 104
     assert all(t.duration_s == 3.0 and t.response_window_s is None for t in cues)
-    assert all("按 Enter" in t.text and "不要按键" in t.text for t in cues)
-    assert all("目标数字" in t.text for t in cues if t.condition == "0-back-cue")
-    assert all("前两个数字" in t.text for t in cues if t.condition == "2-back-cue")
+    assert all("Enter" in t.text and "do not press" in t.text.lower() for t in cues)
+    assert all("target digit" in t.text.lower() for t in cues if t.condition == "0-back-cue")
+    assert all("two trials earlier" in t.text.lower() for t in cues if t.condition == "2-back-cue")
     targets = [t for t in digits if t.is_target]
     assert targets and all(t.expected_key == "return" for t in targets)
     assert all(t.response_window_s == (0.0, 2.0) for t in digits)   # LIT: 2 s 周期
@@ -58,7 +58,7 @@ def test_emotion_trials_have_images_and_block_ratings():
     ratings = [t for t in trials if t.kind == "rating"]
     assert len(images) == 24 and len(ratings) == 6
     assert all(t.image.startswith("stimuli/emotion/") for t in images)
-    assert all("愉快程度" in t.text for t in ratings)
+    assert all("pleasantness" in t.text.lower() for t in ratings)
 
 
 def test_vft_trials_follow_the_lit_single_cycle():

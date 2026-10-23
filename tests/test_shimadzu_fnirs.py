@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -9,8 +10,9 @@ from bplus.fnirs import (FNIRSImportError, ShimadzuFolderImporter, absorbance_to
 from bplus.reports.v27 import build_report_payload
 
 
-RAW_FOLDER = Path("/Users/taowenwen/Desktop/测试数据/fnir")
-GOLDEN_FOLDER = Path("/Users/taowenwen/Desktop/fNIRS数据")
+LOCAL_FIXTURE_ROOT = Path(os.environ.get("BPLUS_SHIMADZU_TEST_DATA", "tests/fixtures/shimadzu-local"))
+RAW_FOLDER = LOCAL_FIXTURE_ROOT / "raw"
+GOLDEN_FOLDER = LOCAL_FIXTURE_ROOT / "golden"
 HAS_REAL = (RAW_FOLDER / "zhangzhengqi20260917_162551.OMM").exists()
 
 

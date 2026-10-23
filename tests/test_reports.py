@@ -45,5 +45,5 @@ def test_html_is_self_contained_and_hides_metrics_above_the_fold():
     html = to_html(_profile(), FEATS)
     assert html.startswith("<!doctype html>")
     assert "<style>" in html and "http://" not in html and "https://" not in html
-    body_before_appendix = html.split("研究者附录")[0]
+    body_before_appendix = html.split("Researcher Appendix")[0]
     assert "μV" not in body_before_appendix and "d_prime" not in body_before_appendix

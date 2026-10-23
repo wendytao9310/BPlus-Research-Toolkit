@@ -39,10 +39,10 @@ def test_partial_report_renormalizes_available_layers_and_writes_audit(tmp_path)
     paths = generate_multimodal_report(source, tmp_path / "reports")
     html = paths["html"].read_text(encoding="utf-8")
     audit = json.loads(paths["state_profile"].read_text(encoding="utf-8"))
-    assert "BPlus 青少年多模态研究报告" in html
-    assert "自动感觉加工 · MMN" in html
-    assert "工作记忆 · N-back" in html
-    assert "数据不足" in html
+    assert "BPlus Youth Multimodal Research Report" in html
+    assert "Automatic Sensory Processing · MMN" in html
+    assert "Working Memory · N-back" in html
+    assert "Insufficient data" in html
     assert audit["sources"]["eeg"]["status"] == "PILOT"
     assert audit["profile"]["integrated"]["weights_effective"]
     for key in ("report_payload", "metrics", "metrics_csv", "qc", "provenance",
@@ -53,9 +53,9 @@ def test_partial_report_renormalizes_available_layers_and_writes_audit(tmp_path)
     assert payload["participant_id"] == "P01"
     assert payload["total_modules"] == 6
     assert all(module["key"] != "recovery" for module in payload["modules"])
-    assert "任务后恢复" not in html
-    assert "研究者方法记录 · 数据预处理" in html
-    assert "模型状态：尚未训练／尚未验证" in html
+    assert "Post-task Recovery" not in html
+    assert "Researcher Method Record · Data Preprocessing" in html
+    assert "Model status:" in html and "NOT_TRAINED" in html
     model_status = json.loads(paths["modeling_status"].read_text(encoding="utf-8"))
     assert model_status["status"] == "NOT_TRAINED"
     model_row = paths["model_features"].read_text(encoding="utf-8-sig")
@@ -75,7 +75,7 @@ def test_failed_module_qc_suppresses_values(tmp_path):
     paths = generate_multimodal_report(source, tmp_path / "reports")
     html = paths["html"].read_text(encoding="utf-8")
     assert "−9.99" not in html and "-9.99" not in html
-    assert "本模块数据未达到预设质量要求" in html
+    assert "did not meet the predefined quality requirements" in html
 
 
 def test_age_specific_clinical_rows_do_not_invent_uncollected_scores(tmp_path):
@@ -89,9 +89,9 @@ def test_age_specific_clinical_rows_do_not_invent_uncollected_scores(tmp_path):
     source.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")
     paths = generate_multimodal_report(source, tmp_path / "reports")
     html = paths["html"].read_text(encoding="utf-8")
-    assert "CDI" in html and "PHQ-15" in html and "SDQ 家长版" in html
+    assert "CDI" in html and "PHQ-15" in html and "SDQ Parent Version" in html
     assert "PHQ-9" not in html
-    assert "未采集" in html and "由临床人员解释" in html
+    assert "Not collected" in html and "clinical staff" in html
 
 
 def test_age_15_clinical_rows_use_adolescent_battery(tmp_path):
@@ -105,7 +105,7 @@ def test_age_15_clinical_rows_use_adolescent_battery(tmp_path):
     source.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")
     html = generate_multimodal_report(source, tmp_path / "reports")["html"].read_text(encoding="utf-8")
     assert "PHQ-9" in html and "PHQ-15" in html
-    assert "CDI" not in html and "SDQ 家长版" not in html
+    assert "CDI" not in html and "SDQ Parent Version" not in html
 
 
 def test_formal_entry_point_requires_review_even_for_legacy_package(tmp_path):
@@ -116,5 +116,5 @@ def test_formal_entry_point_requires_review_even_for_legacy_package(tmp_path):
     }
     source = tmp_path / "legacy.json"
     source.write_text(json.dumps(package), encoding="utf-8")
-    with pytest.raises(ValueError, match="研究者审核"):
+    with pytest.raises(ValueError, match="researcher review"):
         generate_multimodal_report(source, tmp_path / "reports", require_review=True)

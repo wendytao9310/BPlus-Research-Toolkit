@@ -50,7 +50,7 @@ def test_report_requires_researcher_review(tmp_path):
     package = build_analysis_package("P01", "1", mmn={"features": {}, "qc": {"status": "PASS"}})
     source = tmp_path / "analysis.json"
     source.write_text(json.dumps(package, ensure_ascii=False), encoding="utf-8")
-    with pytest.raises(ValueError, match="研究者审核"):
+    with pytest.raises(ValueError, match="researcher review"):
         generate_multimodal_report(source, tmp_path / "reports")
 
     reviewed = review_package(package, reviewer="Dr Li", decision="APPROVED", note="核对完成")
@@ -58,4 +58,4 @@ def test_report_requires_researcher_review(tmp_path):
     paths = generate_multimodal_report(source, tmp_path / "reports")
     audit = json.loads(paths["state_profile"].read_text(encoding="utf-8"))
     assert audit["review"]["decision"] == "APPROVED"
-    assert "不是诊断" in paths["html"].read_text(encoding="utf-8")
+    assert "not equivalent to a clinical diagnosis" in paths["html"].read_text(encoding="utf-8")

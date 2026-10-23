@@ -66,7 +66,7 @@ This source preview can be downloaded as a GitHub Release archive. A portable ma
 
 Version: **0.1.0 public release candidate**
 
-The code licence is intentionally pending final owner approval. Until a licence file is added, copyright is reserved and the repository should be treated as viewable source, not as permission to reuse or redistribute it. Third-party stimulus terms are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Original BPlus source code is released under the [Apache License 2.0](LICENSE). Documentation and third-party stimulus assets retain their stated terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Citation
 

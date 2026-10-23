@@ -8,6 +8,6 @@ authors:
   - family-names: Tao
     given-names: Wenwen
 abstract: "A multimodal experimental acquisition, quality-control, analysis, and reporting toolkit for adolescent mental-health research."
-license: proprietary
+license: Apache-2.0
 repository-code: "REPLACE_AFTER_PUBLICATION"
 

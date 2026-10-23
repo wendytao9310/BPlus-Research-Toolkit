@@ -14,4 +14,4 @@ def test_cli_falls_back_to_pending_behavior_report(tmp_path):
         writer.writerow({"practice": "0", "is_target": "1", "key": "return", "rt_ms": "500"})
     report = generate_report("sub-P01", "ses-1", root=root)
     assert report.exists()
-    assert "实验完成待分析版" in report.read_text(encoding="utf-8")
+    assert "Experiment Complete — Analysis Pending" in report.read_text(encoding="utf-8")

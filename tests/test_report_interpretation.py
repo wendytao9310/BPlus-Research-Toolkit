@@ -18,15 +18,15 @@ def test_numeric_metrics_receive_functional_states_not_measurement_status():
     }
     payload = build_report_payload(package)
     rows = {row["name"]: row for module in payload["modules"] for row in module["rows"]}
-    assert rows["100–250 ms MMN 波幅"]["state"] == "声音变化反应中等"
-    assert rows["峰值潜伏期"]["state"] == "反应时序居中"
-    assert rows["d′（目标辨别能力）"]["state"] == "目标辨别较清晰"
-    assert rows["反应时中位数"]["state"] == "作答速度较快"
-    assert rows["平均激动程度"]["state"] == "主观唤醒较高"
+    assert rows["100–250 ms MMN amplitude"]["state"] == "Moderate auditory-change response"
+    assert rows["Peak latency"]["state"] == "Intermediate response timing"
+    assert rows["d-prime (target discrimination)"]["state"] == "Clear target discrimination"
+    assert rows["Median response time"]["state"] == "Faster response speed"
+    assert rows["Mean arousal rating"]["state"] == "Higher subjective arousal"
     html = render_v27_html(payload)
-    assert "当前反应状态如何得到" in html
-    assert "不是论文提供的临床切点" in html
+    assert "How the Current Response Status Is Derived" in html
+    assert "not clinical cutoffs supplied by those papers" in html
 
 
 def test_missing_and_failed_metrics_are_never_interpreted():
-    assert describe_metric("nback.d_prime", None)[0] == "数据不足"
+    assert describe_metric("nback.d_prime", None)[0] == "Insufficient data"

@@ -29,5 +29,5 @@ def test_complete_mmn_simulation_recovers_truth_and_marks_report(tmp_path):
     arrays = np.load(paths["epochs"])
     assert arrays["standard_epochs_uv"].shape == (160, 3, 601)
     html = paths["html"].read_text(encoding="utf-8")
-    assert "软件模拟验证版" in html
-    assert "不得作为真实被试结果" in html
+    assert "Software Simulation Validation" in html
+    assert "must not be used as a real participant result" in html
