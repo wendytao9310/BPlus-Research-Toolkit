@@ -3,7 +3,7 @@ name = "bplus-research-toolkit"
 version = "0.1.3"
 description = "Multimodal experiment acquisition, quality-control, analysis, and reporting toolkit"
 requires-python = ">=3.11"
-dependencies = ["pyyaml>=6", "jinja2>=3.1"]
+dependencies = ["pyyaml>=6", "jinja2>=3.1", "numpy>=1.26", "Pillow>=10"]
 
 [project.optional-dependencies]
 analysis = ["mne>=1.6", "mne-nirs>=0.6", "neurokit2>=0.2", "pymovements>=0.12", "pandas", "numpy", "scipy"]
