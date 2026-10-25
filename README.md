@@ -64,7 +64,7 @@ Download the verified source package from the [latest GitHub Release](https://gi
 
 ## Project status
 
-Version: **0.1.0 public release candidate**
+Version: **0.1.1 public research preview**
 
 Original BPlus source code is released under the [Apache License 2.0](LICENSE). Documentation and third-party stimulus assets retain their stated terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
