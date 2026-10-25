@@ -1,4 +1,4 @@
-# BPlus Research Toolkit 0.1.1
+# BPlus Research Toolkit 0.1.2
 
 This release packages the English research-software edition for public review.
 
@@ -10,5 +10,5 @@ Boundary: this is a source distribution and local research preview. It is not ye
 
 Licence: original BPlus source code is available under Apache License 2.0. Stimuli and other third-party materials remain subject to their own terms.
 
-Changes since 0.1.0: synchronized English-language regression tests, removed machine-specific fixture paths, translated the optional Streamlit dashboard, added the final repository and Release links, and normalized the Apache-2.0 distribution files.
+Changes since 0.1.0: synchronized English-language regression tests, removed machine-specific fixture paths, translated the optional Streamlit dashboard, added the final repository and Release links, and normalized the complete Apache-2.0 distribution text.
 
