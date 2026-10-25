@@ -29,6 +29,14 @@ Modalities are staged first and analysed together only after the operator select
 
 ## Quick start on macOS
 
+For Apple Silicon Macs, download the `.dmg` from the [latest GitHub Release](https://github.com/wendytao9310/BPlus-Research-Toolkit/releases/latest), drag **BPlus Research Toolkit** to Applications, and open it. The current app bundle is ad-hoc signed for integrity but is not Apple-notarized; macOS may require **Control-click → Open** on first launch.
+
+The standalone app stores participant/session outputs locally in:
+
+`~/Library/Application Support/BPlus Research Toolkit/data/`
+
+The source-based route remains available for development and reproducible inspection:
+
 Requirements: macOS, Python 3.11, and approximately 20 GiB free disk space for a full PsychoPy environment.
 
 ```bash
@@ -64,7 +72,7 @@ Download the verified source package from the [latest GitHub Release](https://gi
 
 ## Project status
 
-Version: **0.1.2 public research preview**
+Version: **0.1.3 public research preview**
 
 Original BPlus source code is released under the [Apache License 2.0](LICENSE). Documentation and third-party stimulus assets retain their stated terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 

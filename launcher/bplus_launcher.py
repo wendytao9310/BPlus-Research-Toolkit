@@ -5,13 +5,21 @@ from __future__ import annotations
 import queue
 import csv
 import json
+import os
 import sys
 import threading
 import traceback
 import webbrowser
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+FROZEN = bool(getattr(sys, "frozen", False))
+ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[1]))
+_default_work_root = Path.home() / "Library" / "Application Support" / "BPlus Research Toolkit"
+WORK_ROOT = (Path(os.environ.get("BPLUS_USER_DATA_DIR", _default_work_root)) if FROZEN else ROOT)
+DATA_ROOT = WORK_ROOT / "data"
+DATA_ROOT.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("BPLUS_CONFIG_DIR", str(ROOT / "configs"))
+os.chdir(ROOT)
 sys.path.insert(0, str(ROOT / "src"))
 
 import tkinter as tk
@@ -177,7 +185,7 @@ class Launcher(tk.Tk):
 
         utility = tk.Frame(right, bg=colors["bg"]); utility.pack(fill="x", pady=(2, 8))
         button(utility, "System Tools", self.open_advanced_tools, width=14).pack(side="right")
-        label(utility, "Legacy analysis-package migration and system checks are available under System Tools.", size=10,
+        label(utility, "Legacy migration and system checks are under System Tools.", size=10,
               color=colors["muted"]).pack(side="left", pady=10)
 
         log_card = card(right); log_card.pack(fill="both", expand=True)
@@ -196,11 +204,11 @@ class Launcher(tk.Tk):
         candidates: list[Path] = []
         if self.latest_report and self.latest_report.exists():
             candidates.append(self.latest_report)
-        preferred = (ROOT / "data" / "reports" / "multimodal" /
+        preferred = (DATA_ROOT / "reports" / "multimodal" /
                      f"sub-{participant}_ses-{session}" / "report.html")
         if preferred.exists():
             candidates.append(preferred)
-        candidates.extend((ROOT / "data" / "reports").glob(
+        candidates.extend((DATA_ROOT / "reports").glob(
             f"**/sub-{participant}_ses-{session}*_report.html"))
         candidates = [path for path in candidates if path.exists()]
         if not candidates:
@@ -251,7 +259,7 @@ class Launcher(tk.Tk):
             for paradigm in selected:
                 report = run_preflight(self.participant.get().strip(), self.session.get().strip(),
                                        mode=self.mode.get(), paradigm=paradigm,
-                                       out_dir=ROOT / "data" / "session")
+                                       out_dir=DATA_ROOT / "session")
                 self._write(f"[{report['verdict']}] {paradigm} preflight → {report['path']}")
                 passed &= report["verdict"] == "PASS"
         except Exception:
@@ -285,10 +293,12 @@ class Launcher(tk.Tk):
                 self.events.put(("log", f"[RUNNING] {paradigm}"))
                 if mode == "VISUAL_DEMO":
                     import subprocess
-                    command = [sys.executable, str(ROOT / "scripts" / "run_session.py"),
-                               "--paradigm", paradigm, "--participant", participant,
-                               "--session", session, "--mode", "VISUAL_DEMO", "--visual-demo",
-                               "--out", str(ROOT / "data" / "session")]
+                    command = ([sys.executable, "--bplus-run-session", paradigm, participant, session,
+                                str(DATA_ROOT / "session")] if FROZEN else
+                               [sys.executable, str(ROOT / "scripts" / "run_session.py"),
+                                "--paradigm", paradigm, "--participant", participant,
+                                "--session", session, "--mode", "VISUAL_DEMO", "--visual-demo",
+                                "--out", str(DATA_ROOT / "session")])
                     completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
                     if completed.returncode == 130:
                         self.events.put(("aborted", completed.stdout.strip()))
@@ -297,10 +307,10 @@ class Launcher(tk.Tk):
                         raise RuntimeError(completed.stderr or completed.stdout)
                     self.events.put(("log", completed.stdout.strip()))
                 else:
-                    result = run_session(paradigm, participant, session, ROOT / "data" / "session",
+                    result = run_session(paradigm, participant, session, DATA_ROOT / "session",
                                          dummy=dummy, mode=mode, pilot_staff=(mode == "PILOT"))
                     self.events.put(("log", f"[PASS] {paradigm}: {result.behavior_log}"))
-            report = generate_session_report(ROOT / "data" / "session", ROOT / "data" / "reports",
+            report = generate_session_report(DATA_ROOT / "session", DATA_ROOT / "reports",
                                              participant_id=participant, session_id=session,
                                              paradigms=selected, age=age)
             self.events.put(("report", str(report)))
@@ -309,13 +319,16 @@ class Launcher(tk.Tk):
             self.events.put(("error", traceback.format_exc()))
 
     def tests(self) -> None:
+        if FROZEN:
+            messagebox.showinfo("Developer Tests", "Developer tests are run in the source distribution and are not bundled into the standalone app.")
+            return
         import subprocess
         result = subprocess.run([sys.executable, "-m", "pytest", "-q"], cwd=ROOT,
                                 capture_output=True, text=True)
         self._write(result.stdout.strip() or result.stderr.strip())
 
     def show_responses(self) -> None:
-        files = sorted((ROOT / "data" / "session").glob(
+        files = sorted((DATA_ROOT / "session").glob(
             f"sub-{self.participant.get().strip()}_ses-{self.session.get().strip()}_*_behavior.csv"),
             key=lambda path: path.stat().st_mtime, reverse=True)
         if not files:
@@ -342,7 +355,7 @@ class Launcher(tk.Tk):
     def show_report(self) -> None:
         try:
             report = generate_session_report(
-                ROOT / "data" / "session", ROOT / "data" / "reports",
+                DATA_ROOT / "session", DATA_ROOT / "reports",
                 participant_id=self.participant.get().strip(), session_id=self.session.get().strip(),
                 paradigms=self._selection(),
                 age=int(self.age.get()) if self.age.get().strip().isdigit() else None,
@@ -362,7 +375,7 @@ class Launcher(tk.Tk):
         if not package:
             return
         try:
-            paths = generate_multimodal_report(package, ROOT / "data" / "reports" / "multimodal",
+            paths = generate_multimodal_report(package, DATA_ROOT / "reports" / "multimodal",
                                                require_review=True)
             self.latest_report = paths["html"]
             webbrowser.open(paths["html"].as_uri())
@@ -389,7 +402,7 @@ class Launcher(tk.Tk):
         status.pack(fill="both", expand=True, padx=24, pady=12)
 
         def refresh() -> None:
-            manifest = load_import_session(ROOT / "data" / "imports",
+            manifest = load_import_session(DATA_ROOT / "imports",
                                            participant_id=participant, session_id=session)
             lines = []
             for row in summarize_import_session(manifest):
@@ -414,7 +427,7 @@ class Launcher(tk.Tk):
             if not folder:
                 return
             try:
-                path, entry = stage_folder(ROOT / "data" / "imports", participant_id=participant,
+                path, entry = stage_folder(DATA_ROOT / "imports", participant_id=participant,
                                            session_id=session, modality=modality, folder=folder)
                 self._write(f"[{entry['label']} STAGED] {entry['inventory']['file_count']} files · {path}")
                 refresh()
@@ -431,7 +444,7 @@ class Launcher(tk.Tk):
                 return
             try:
                 path, entry = stage_file(
-                    ROOT / "data" / "imports", participant_id=participant,
+                    DATA_ROOT / "imports", participant_id=participant,
                     session_id=session, modality=modality, file=selected)
                 self._write(f"[{entry['label']} STAGED] {entry['file']['path']} · {path}")
                 refresh()
@@ -487,10 +500,10 @@ class Launcher(tk.Tk):
                 raise ValueError("Enter the participant ID and session ID first.")
             age_text = self.age.get().strip()
             age = int(age_text) if age_text.isdigit() and 6 <= int(age_text) <= 18 else None
-            session_manifest = manifest_path(ROOT / "data" / "imports", participant, session)
+            session_manifest = manifest_path(DATA_ROOT / "imports", participant, session)
             if not session_manifest.exists():
                 raise ValueError("No data package has been imported. Open the Multimodal Data Import Center first.")
-            manifest = load_import_session(ROOT / "data" / "imports",
+            manifest = load_import_session(DATA_ROOT / "imports",
                                            participant_id=participant, session_id=session)
             rows = [row for row in summarize_import_session(manifest) if row["status"] != "NOT_STAGED"]
             names = "\n".join(f"• {row['label']}: {row['file_count']} files" for row in rows)
@@ -502,7 +515,7 @@ class Launcher(tk.Tk):
             self._write("[UNIFIED ANALYSIS] Analyzing all staged data packages. Please wait…")
             def worker() -> None:
                 try:
-                    result = run_unified_analysis(session_manifest, project_root=ROOT,
+                    result = run_unified_analysis(session_manifest, project_root=WORK_ROOT,
                                                   reviewer=reviewer, age=age)
                     self.events.put(("unified_done", json.dumps({
                         "report": str(result["report"]), "package": str(result["package"]),
@@ -525,7 +538,7 @@ class Launcher(tk.Tk):
             session = self.session.get().strip()
             if not participant or not session:
                 raise ValueError("Enter the participant ID and session ID first.")
-            path, entry = stage_folder(ROOT / "data" / "imports", participant_id=participant,
+            path, entry = stage_folder(DATA_ROOT / "imports", participant_id=participant,
                                        session_id=session, modality="fnirs", folder=folder)
             self._write(f"[fNIRS STAGED] {entry['inventory']['file_count']} files · {path}")
             messagebox.showinfo("BPlus", "The complete fNIRS package was added to this session.\nIt has not been analyzed and no report has been generated.")
@@ -554,7 +567,7 @@ class Launcher(tk.Tk):
         def worker() -> None:
             try:
                 sfreq, channels, metadata = read_curry_metadata(curry)
-                output = (ROOT / "data" / "analysis" / "eeg_simulation" /
+                output = (DATA_ROOT / "analysis" / "eeg_simulation" /
                           f"sub-{simulation_id}_ses-{session}" / "BPlus_Output")
                 paths = run_mmn_simulation(output, participant_id=simulation_id,
                                            session_id=session, sfreq=sfreq,
@@ -581,7 +594,7 @@ class Launcher(tk.Tk):
             messagebox.showerror("EEG Import Failed", "Enter the participant ID and session ID first.")
             return
         try:
-            path, entry = stage_folder(ROOT / "data" / "imports", participant_id=participant,
+            path, entry = stage_folder(DATA_ROOT / "imports", participant_id=participant,
                                        session_id=session, modality="eeg", folder=folder)
             self._write(f"[EEG STAGED] {entry['inventory']['file_count']} files · {path}")
             warning = "\nPreflight notes: " + "; ".join(entry["issues"]) if entry["issues"] else ""
@@ -615,7 +628,7 @@ class Launcher(tk.Tk):
         ]
         variables: dict[str, tk.StringVar] = {}
         existing = {}
-        manifest = load_import_session(ROOT / "data" / "imports",
+        manifest = load_import_session(DATA_ROOT / "imports",
                                        participant_id=participant, session_id=session)
         clinical_entry = (manifest.get("modalities") or {}).get("clinical") or {}
         existing_path = clinical_entry.get("file", {}).get("path")
@@ -647,7 +660,7 @@ class Launcher(tk.Tk):
                     {"features": {}, "sources": {}, "analysis": {}}, assessment,
                     clinician=clinician.get(), note=note.get())
                 cleaned = validated["features"]["clinical"]
-                output = (ROOT / "data" / "imports" / f"sub-{participant}_ses-{session}" /
+                output = (DATA_ROOT / "imports" / f"sub-{participant}_ses-{session}" /
                           "clinical_assessment.json")
                 output.parent.mkdir(parents=True, exist_ok=True)
                 payload = {"participant_id": participant, "session_id": session,
@@ -655,7 +668,7 @@ class Launcher(tk.Tk):
                            "note": note.get().strip()}
                 output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
                 path, _ = stage_file(
-                    ROOT / "data" / "imports", participant_id=participant,
+                    DATA_ROOT / "imports", participant_id=participant,
                     session_id=session, modality="clinical", file=output)
                 self._write(f"[CLINICAL/PSYCHOLOGICAL DATA STAGED] {output} · {path}")
                 messagebox.showinfo("Clinical Data Staged",
@@ -675,13 +688,13 @@ class Launcher(tk.Tk):
         if choice is None:
             return
         try:
-            output = ROOT / "data" / "exports" / "behavior"
+            output = DATA_ROOT / "exports" / "behavior"
             if choice:
                 participant = self.participant.get().strip()
                 session = self.session.get().strip()
                 if not participant or not session:
                     raise ValueError("Enter the participant ID and session ID first.")
-                result = export_behavior_session(ROOT / "data" / "session", output,
+                result = export_behavior_session(DATA_ROOT / "session", output,
                                                  participant_id=participant, session_id=session)
                 self._write(f"[BEHAVIORAL DATA EXPORTED] {result['zip']}")
                 messagebox.showinfo(
@@ -689,7 +702,7 @@ class Launcher(tk.Tk):
                     f"Research-analysis data package generated:\n{result['zip']}\n\n"
                     "Includes trial-level CSV, BIDS events.tsv, summary tables, data dictionary, QC, and provenance inventory.")
             else:
-                result = export_all_behavior_sessions(ROOT / "data" / "session", output)
+                result = export_all_behavior_sessions(DATA_ROOT / "session", output)
                 self._write(f"[BATCH BEHAVIORAL EXPORT] {result['n_sessions']} participant sessions → {output}")
                 messagebox.showinfo(
                     "Batch Export Complete",
@@ -777,11 +790,11 @@ class Launcher(tk.Tk):
                     raise ValueError("MMN/VFT data did not pass QC or are incomplete and cannot be approved.")
                 package = review_package(package, reviewer=reviewer.get(), decision="APPROVED",
                                          note="Approved after the researcher reviewed data provenance, QC, and scoring in the Results Center")
-                folder = ROOT / "data" / "analysis"
+                folder = DATA_ROOT / "analysis"
                 folder.mkdir(parents=True, exist_ok=True)
                 path = folder / f"sub-{self.participant.get()}_ses-{self.session.get()}_analysis.json"
                 path.write_text(json.dumps(package, ensure_ascii=False, indent=2), encoding="utf-8")
-                paths = generate_multimodal_report(path, ROOT / "data" / "reports" / "multimodal",
+                paths = generate_multimodal_report(path, DATA_ROOT / "reports" / "multimodal",
                                                    require_review=True)
                 self.latest_report = paths["html"]
                 webbrowser.open(paths["html"].as_uri())
@@ -859,5 +872,54 @@ class Launcher(tk.Tk):
         self.after(150, self._poll)
 
 
+def _run_frozen_visual_helper(arguments: list[str]) -> int:
+    """Run one visual paradigm in a child process of the frozen app."""
+    if len(arguments) != 5:
+        print("Invalid frozen-session arguments", file=sys.stderr)
+        return 2
+    _, paradigm, participant, session, output = arguments
+    try:
+        result = run_session(paradigm, participant, session, output,
+                             mode="VISUAL_DEMO", visual_demo=True)
+        print(f"[PASS] {paradigm}: {result.behavior_log}")
+        return 0
+    except KeyboardInterrupt:
+        print("The participant stopped the paradigm with T.")
+        return 130
+    except Exception:
+        traceback.print_exc()
+        return 1
+
+
+def _run_frozen_self_test(arguments: list[str]) -> int:
+    """Exercise the frozen application without opening experiment windows."""
+    if len(arguments) != 2:
+        print("Usage: --bplus-self-test OUTPUT_DIRECTORY", file=sys.stderr)
+        return 2
+    output_root = Path(arguments[1]).expanduser().resolve()
+    session_dir = output_root / "session"
+    report_dir = output_root / "reports"
+    participant = "FROZEN-SMOKE"
+    session = "1"
+    try:
+        for paradigm in PARADIGMS:
+            result = run_session(paradigm, participant, session, session_dir,
+                                 dummy=True, mode="DEMO")
+            print(f"[PASS] {paradigm}: {result.behavior_log}")
+        report = generate_session_report(
+            session_dir, report_dir, participant_id=participant,
+            session_id=session, paradigms=PARADIGMS,
+        )
+        print(f"[PASS] report: {report}")
+        return 0
+    except Exception:
+        traceback.print_exc()
+        return 1
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "--bplus-run-session":
+        raise SystemExit(_run_frozen_visual_helper(sys.argv[1:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "--bplus-self-test":
+        raise SystemExit(_run_frozen_self_test(sys.argv[1:]))
     Launcher().mainloop()
